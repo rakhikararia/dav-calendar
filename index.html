@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#B91C1C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="DAV Calendar">
+<title>DAV Public School | Academic Calendar 2026-27</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;font-family:'Poppins',sans-serif;background:#0B0F1E;color:#E2E8FF;-webkit-font-smoothing:antialiased}
+:root{
+  --red:#B91C1C;--red2:#DC2626;--gold:#F59E0B;--gold2:#FCD34D;
+  --bg:#0B0F1E;--s1:#111827;--s2:#1C2440;--s3:#263060;
+  --border:#2D3A5C;--text:#E2E8FF;--muted:#8892B0;--dim:#4A5280;
+  --exam:#EF4444;--exbg:rgba(239,68,68,.15);
+  --brk:#3B82F6;--brkbg:rgba(59,130,246,.15);
+  --hol:#22C55E;--holbg:rgba(34,197,94,.15);
+  --ptm:#EAB308;--ptmbg:rgba(234,179,8,.15);
+  --spt:#F97316;--sptbg:rgba(249,115,22,.15);
+  --cca:#A855F7;--ccabg:rgba(168,85,247,.15);
+  --r:12px;--hh:60px
+}
+/* ── SCREEN SYSTEM ── */
+#app{width:100%;height:100%;position:relative;overflow:hidden}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg);transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);will-change:transform;overflow:hidden}
+.screen.active{transform:translateX(0)}
+.screen.behind{transform:translateX(-25%)}
+
+/* ── SPLASH ── */
+#s-splash{transform:translateX(0);justify-content:center;align-items:center;text-align:center;padding:28px 24px;background:linear-gradient(160deg,#0B0F1E 0%,#180A0A 50%,#0B0F1E 100%)}
+.sp-glow{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(185,28,28,.2) 0%,transparent 65%);top:-80px;left:50%;transform:translateX(-50%);pointer-events:none;animation:glow 4s ease-in-out infinite}
+@keyframes glow{0%,100%{opacity:.7;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.1)}}
+.sp-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+.sp-badge{width:130px;height:130px;border-radius:50%;border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;position:relative;box-shadow:0 0 0 10px rgba(245,158,11,.07),0 0 50px rgba(245,158,11,.15);animation:popIn .7s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+.sp-badge::before{content:'';position:absolute;inset:7px;border-radius:50%;border:1px solid rgba(245,158,11,.3)}
+.sp-inner{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--red),#7F1D1D);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(185,28,28,.5)}
+.sp-dav{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:#fff;line-height:1}
+.sp-ps{font-size:.4rem;letter-spacing:2px;color:rgba(255,255,255,.8);text-transform:uppercase;margin-top:2px}
+.sp-name{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,5.5vw,2.4rem);font-weight:900;color:#fff;margin-bottom:6px;animation:up .6s .25s both}
+.sp-loc{font-size:.82rem;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;font-weight:600;animation:up .6s .35s both}
+.sp-city{font-size:.74rem;color:var(--muted);margin-top:3px;animation:up .6s .4s both}
+.sp-line{width:70px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:20px auto;animation:up .6s .45s both}
+.sp-sess{font-size:.82rem;color:var(--muted);animation:up .6s .5s both}
+.sp-sess strong{color:var(--text);font-weight:600}
+.sp-terms{display:flex;gap:10px;justify-content:center;margin:16px 0 32px;flex-wrap:wrap;animation:up .6s .55s both}
+.sp-term{background:var(--s2);border:1px solid var(--border);border-radius:20px;padding:5px 13px;font-size:.7rem;color:var(--muted)}
+.sp-term b{color:var(--gold)}
+.btn-go{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--red),var(--red2));color:#fff;padding:15px 36px;border-radius:50px;font-size:.95rem;font-weight:700;border:none;cursor:pointer;box-shadow:0 6px 28px rgba(185,28,28,.45);animation:up .6s .65s both,pulse 3s 1.5s ease-in-out infinite;transition:transform .15s}
+.btn-go:active{transform:scale(.96)}
+@keyframes pulse{0%,100%{box-shadow:0 6px 28px rgba(185,28,28,.45)}50%{box-shadow:0 6px 40px rgba(185,28,28,.7)}}
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.sp-ver{position:absolute;bottom:16px;left:0;right:0;text-align:center;font-size:.62rem;color:var(--dim);animation:up .6s .9s both}
+
+/* ── TOPBAR ── */
+.topbar{height:var(--hh);background:var(--s1);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;padding:0 14px;flex-shrink:0;z-index:10}
+.tb-back{width:36px;height:36px;border-radius:9px;background:var(--s2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .15s}
+.tb-back:active{background:var(--s3)}
+.tb-back svg{width:18px;height:18px;fill:none;stroke:var(--muted);stroke-width:2.5;stroke-linecap:round}
+.tb-title{flex:1;min-width:0}
+.tb-title h2{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-title p{font-size:.65rem;color:var(--dim);margin-top:1px}
+.tb-actions{display:flex;gap:8px}
+.ib{width:36px;height:36px;border-radius:9px;background:var(--s2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s;position:relative}
+.ib:active{background:var(--s3)}
+.ib svg{width:17px;height:17px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ib.admin-active{border-color:rgba(245,158,11,.5)}
+.ib.admin-active svg{stroke:var(--gold)}
+.ndot{position:absolute;top:7px;right:7px;width:6px;height:6px;background:var(--red2);border-radius:50%;border:1.5px solid var(--s1);display:none}
+
+/* ── ADMIN BAR ── */
+#admin-bar{display:none;background:rgba(185,28,28,.92);backdrop-filter:blur(8px);padding:5px 14px;font-size:.7rem;color:#fff;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.1)}
+.ab-logout{background:rgba(255,255,255,.18);border:none;color:#fff;padding:3px 10px;border-radius:6px;font-size:.68rem;cursor:pointer;font-family:'Poppins',sans-serif}
+
+/* ── SCROLLABLE BODY ── */
+.sbody{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.sbody::-webkit-scrollbar{width:3px}
+.sbody::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* ── YEAR VIEW ── */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;padding:14px 12px 6px}
+.scard{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:11px 8px;text-align:center;position:relative;overflow:hidden}
+.scard::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0}
+.scard.ec::after{background:var(--exam)}.scard.bc::after{background:var(--brk)}.scard.hc::after{background:var(--hol)}
+.scard.pc::after{background:var(--ptm)}.scard.sc::after{background:var(--spt)}.scard.cc::after{background:var(--cca)}
+.snum{font-family:'Roboto Mono',monospace;font-size:1.5rem;font-weight:500;line-height:1;margin-bottom:3px}
+.scard.ec .snum{color:var(--exam)}.scard.bc .snum{color:var(--brk)}.scard.hc .snum{color:var(--hol)}
+.scard.pc .snum{color:var(--ptm)}.scard.sc .snum{color:var(--spt)}.scard.cc .snum{color:var(--cca)}
+.slbl{font-size:.58rem;color:var(--dim);text-transform:uppercase;letter-spacing:.8px}
+
+.sec-title{padding:12px 12px 6px;font-size:.62rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim)}
+
+/* Upcoming strip */
+.upcoming{margin:0 12px 4px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:12px}
+.up-hd{font-size:.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.up-hd span{color:var(--gold)}
+.up-item{display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:9px;cursor:pointer;transition:background .15s;margin-bottom:3px}
+.up-item:active{background:var(--s3)}
+.up-badge{width:42px;height:42px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.up-d{font-family:'Roboto Mono',monospace;font-size:1rem;font-weight:500;line-height:1}
+.up-m{font-size:.52rem;text-transform:uppercase;letter-spacing:.8px;margin-top:2px;opacity:.85}
+.up-info{flex:1;min-width:0}
+.up-name{font-size:.8rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.up-away{font-size:.66rem;color:var(--dim);margin-top:2px}
+.up-arr{color:var(--dim);font-size:.9rem}
+.no-upcoming{font-size:.78rem;color:var(--dim);text-align:center;padding:12px 0}
+
+/* Months grid */
+.months-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 12px 16px}
+.mcard{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:13px 11px;cursor:pointer;transition:border-color .2s,transform .15s;position:relative;overflow:hidden}
+.mcard:active{transform:scale(.97);border-color:var(--gold)}
+.mcard-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.mcard-name{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--text)}
+.mcard-yr{font-size:.6rem;color:var(--dim)}
+.mcard-cnt{font-family:'Roboto Mono',monospace;font-size:.68rem;background:var(--s3);color:var(--gold);padding:2px 8px;border-radius:10px}
+.mini-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:9px}
+.md{aspect-ratio:1;border-radius:2px;background:var(--s3)}
+.md.em{background:transparent}.md.su{background:rgba(239,68,68,.18)}
+.md.exam{background:var(--exam)}.md.brk{background:var(--brk)}.md.hol{background:var(--hol)}
+.md.ptm{background:var(--ptm)}.md.spt{background:var(--spt)}.md.cca{background:var(--cca)}
+.mcard-tags{display:flex;gap:4px;flex-wrap:wrap}
+.mtag{font-size:.57rem;padding:2px 7px;border-radius:10px;font-weight:600}
+.mtag.exam{background:var(--exbg);color:var(--exam)}.mtag.brk{background:var(--brkbg);color:var(--brk)}
+.mtag.hol{background:var(--holbg);color:var(--hol)}.mtag.ptm{background:var(--ptmbg);color:var(--ptm)}
+.mtag.spt{background:var(--sptbg);color:var(--spt)}.mtag.cca{background:var(--ccabg);color:var(--cca)}
+
+/* Legend scroll */
+.legend{display:flex;gap:7px;padding:8px 12px;overflow-x:auto;scrollbar-width:none;flex-shrink:0}
+.legend::-webkit-scrollbar{display:none}
+.lpill{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;border:1px solid var(--border);background:var(--s2);font-size:.68rem;color:var(--muted);white-space:nowrap;flex-shrink:0}
+.ldot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ── MONTH VIEW ── */
+.m-hero{padding:14px 14px 10px;background:linear-gradient(180deg,var(--s1) 0%,var(--bg) 100%);border-bottom:1px solid var(--border);flex-shrink:0}
+.m-name{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;line-height:1;color:var(--text)}
+.m-yr{color:var(--gold)}
+.m-stats{display:flex;gap:7px;margin-top:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.m-stats::-webkit-scrollbar{display:none}
+.msc{display:flex;align-items:center;gap:5px;background:var(--s2);border:1px solid var(--border);border-radius:20px;padding:4px 10px;font-size:.68rem;white-space:nowrap;flex-shrink:0}
+.msc .n{font-family:'Roboto Mono',monospace;font-weight:500}
+.wdays{display:grid;grid-template-columns:repeat(7,1fr);background:var(--s2);border-bottom:1px solid var(--border);flex-shrink:0}
+.wd{text-align:center;padding:7px 2px;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--dim)}
+.wd.su{color:var(--exam)}
+.days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;padding:4px}
+.dcell{background:var(--s2);border-radius:8px;min-height:72px;padding:6px 5px;cursor:pointer;transition:background .15s,transform .1s;border:1px solid transparent;position:relative;overflow:hidden}
+.dcell:active{transform:scale(.94)}
+.dcell.emp{background:transparent;border-color:transparent;cursor:default}
+.dcell.emp:active{transform:none}
+.dcell.su{background:rgba(239,68,68,.07)}
+.dcell.td{border-color:var(--gold)!important;background:rgba(245,158,11,.06)}
+.dcell.hev{border-color:var(--border)}
+.dnum{font-family:'Roboto Mono',monospace;font-size:.72rem;color:var(--dim);margin-bottom:3px;display:flex;align-items:center;gap:3px}
+.dcell.su .dnum{color:var(--exam)}.dcell.td .dnum{color:var(--gold)}
+.td-dot{width:4px;height:4px;border-radius:50%;background:var(--gold)}
+.dev{font-size:.57rem;line-height:1.3;padding:2px 4px;border-radius:4px;font-weight:600;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
+.dev.exam{background:var(--exbg);color:var(--exam)}.dev.brk{background:var(--brkbg);color:var(--brk)}
+.dev.hol{background:var(--holbg);color:var(--hol)}.dev.ptm{background:var(--ptmbg);color:var(--ptm)}
+.dev.spt{background:var(--sptbg);color:var(--spt)}.dev.cca{background:var(--ccabg);color:var(--cca)}
+.add-plus{position:absolute;bottom:4px;right:5px;font-size:.65rem;color:var(--dim);opacity:.5}
+.mnavbar{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--s1);border-top:1px solid var(--border);flex-shrink:0}
+.mnav{display:flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:7px 13px;font-size:.75rem;color:var(--muted);cursor:pointer;transition:background .15s}
+.mnav:active{background:var(--s3)}
+.mnav svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round}
+.mpos{font-size:.7rem;color:var(--dim);font-weight:500}
+
+/* ── DAY VIEW ── */
+.d-hero{padding:22px 18px 18px;background:linear-gradient(135deg,var(--s1),var(--s2));border-bottom:1px solid var(--border);position:relative;overflow:hidden;flex-shrink:0}
+.d-hero::before{content:'';position:absolute;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(185,28,28,.12) 0%,transparent 70%);top:-40px;right:-30px;pointer-events:none}
+.today-badge{font-size:.65rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.d-big{font-family:'Playfair Display',serif;font-size:4.5rem;font-weight:900;line-height:1;color:var(--gold)}
+.d-full{font-size:.95rem;font-weight:600;color:var(--text);margin-top:4px}
+.d-wd{display:inline-block;background:var(--s3);border:1px solid var(--border);border-radius:20px;padding:4px 13px;font-size:.7rem;color:var(--muted);margin-top:8px}
+.d-body{padding:16px}
+.ev-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;position:relative;overflow:hidden}
+.ev-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}
+.ev-card.exam::before{background:var(--exam)}.ev-card.brk::before{background:var(--brk)}
+.ev-card.hol::before{background:var(--hol)}.ev-card.ptm::before{background:var(--ptm)}
+.ev-card.spt::before{background:var(--spt)}.ev-card.cca::before{background:var(--cca)}
+.ev-type{font-size:.62rem;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:5px}
+.ev-card.exam .ev-type{color:var(--exam)}.ev-card.brk .ev-type{color:var(--brk)}
+.ev-card.hol .ev-type{color:var(--hol)}.ev-card.ptm .ev-type{color:var(--ptm)}
+.ev-card.spt .ev-type{color:var(--spt)}.ev-card.cca .ev-type{color:var(--cca)}
+.ev-name{font-size:1rem;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:14px}
+.ev-acts{display:flex;gap:8px}
+.ebtn{padding:8px 16px;border-radius:8px;font-size:.74rem;font-weight:700;cursor:pointer;transition:all .15s;font-family:'Poppins',sans-serif;border:1px solid}
+.ebtn.edit{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:var(--gold)}
+.ebtn.edit:active{background:rgba(245,158,11,.2)}
+.ebtn.del{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.25);color:var(--exam)}
+.ebtn.del:active{background:rgba(239,68,68,.2)}
+.no-ev{text-align:center;padding:36px 16px;color:var(--dim)}
+.no-ev .ni{font-size:2.5rem;margin-bottom:10px}
+.no-ev p{font-size:.85rem;margin-bottom:20px}
+.btn-add-day{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--red),var(--red2));color:#fff;padding:12px 28px;border-radius:30px;font-size:.86rem;font-weight:700;cursor:pointer;border:none;box-shadow:0 4px 18px rgba(185,28,28,.35);font-family:'Poppins',sans-serif}
+.dnav{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--s1);border-top:1px solid var(--border);flex-shrink:0}
+.dnavb{display:flex;align-items:center;gap:5px;background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:7px 12px;font-size:.73rem;color:var(--muted);cursor:pointer;transition:background .15s}
+.dnavb:active{background:var(--s3)}
+.dnavb svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round}
+
+/* ── MODAL / OVERLAY ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:900;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(4px)}
+.overlay.on{opacity:1;pointer-events:all}
+.sheet{background:var(--s1);border:1px solid var(--border);border-radius:22px 22px 0 0;padding:20px 18px 28px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .32s cubic-bezier(.4,0,.2,1)}
+.overlay.on .sheet{transform:translateY(0)}
+.sh-handle{width:38px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 18px}
+.sh-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:5px}
+.sh-sub{font-size:.78rem;color:var(--muted);margin-bottom:18px}
+.fl{margin-bottom:13px}
+.flb{display:block;font-size:.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--dim);margin-bottom:5px}
+.fi{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'Poppins',sans-serif;font-size:.88rem;padding:11px 13px;outline:none;transition:border-color .2s;-webkit-appearance:none}
+.fi:focus{border-color:var(--gold)}
+.fi::placeholder{color:var(--dim)}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.cb{background:var(--s2);border:1.5px solid var(--border);border-radius:10px;padding:10px 5px;text-align:center;cursor:pointer;transition:all .15s;font-family:'Poppins',sans-serif}
+.cb:active,.cb.sel{border-color:currentColor}
+.cb .ci{font-size:1.3rem;display:block;margin-bottom:3px}
+.cb .cn{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.cb.exam{color:var(--exam)}.cb.exam.sel{background:var(--exbg)}
+.cb.brk{color:var(--brk)}.cb.brk.sel{background:var(--brkbg)}
+.cb.hol{color:var(--hol)}.cb.hol.sel{background:var(--holbg)}
+.cb.ptm{color:var(--ptm)}.cb.ptm.sel{background:var(--ptmbg)}
+.cb.spt{color:var(--spt)}.cb.spt.sel{background:var(--sptbg)}
+.cb.cca{color:var(--cca)}.cb.cca.sel{background:var(--ccabg)}
+.bp{width:100%;padding:14px;border-radius:11px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;border:none;margin-bottom:9px;transition:all .15s}
+.bp:active{transform:scale(.98)}
+.bp.primary{background:linear-gradient(135deg,var(--red),var(--red2));color:#fff;box-shadow:0 4px 18px rgba(185,28,28,.35)}
+.bp.secondary{background:none;border:1px solid var(--border);color:var(--muted)}
+.bp.secondary:active{background:var(--s2)}
+.bp.danger{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--exam)}
+.bp.danger:active{background:rgba(239,68,68,.2)}
+.err{color:var(--exam);font-size:.74rem;margin-bottom:10px;display:none}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--s2);border:1px solid var(--border);border-radius:30px;padding:10px 20px;font-size:.8rem;z-index:999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.ok{border-color:rgba(34,197,94,.4);color:var(--hol)}
+#toast.er{border-color:rgba(239,68,68,.4);color:var(--exam)}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ══════════ SPLASH ══════════ -->
+<div class="screen active" id="s-splash">
+  <div class="sp-grid"></div>
+  <div class="sp-glow"></div>
+  <div class="sp-badge">
+    <div class="sp-inner">
+      <div class="sp-dav">DAV</div>
+      <div class="sp-ps">Public School</div>
+    </div>
+  </div>
+  <div class="sp-name">DAV Public School</div>
+  <div class="sp-loc">Sector 4, Bokaro Steel City</div>
+  <div class="sp-city">Jharkhand &nbsp;·&nbsp; CBSE Affiliated</div>
+  <div class="sp-line"></div>
+  <div class="sp-sess">Academic Calendar &nbsp;·&nbsp; <strong>Session 2026–27</strong></div>
+  <div class="sp-terms">
+    <div class="sp-term"><b>Term I</b> &nbsp;Apr – Sep 2026</div>
+    <div class="sp-term"><b>Term II</b> &nbsp;Oct 2026 – Mar 2027</div>
+  </div>
+  <button class="btn-go" onclick="nav('year')">
+    Open Calendar &nbsp;→
+  </button>
+  <div class="sp-ver">v2.0 · Works Offline · Admin Protected</div>
+</div>
+
+<!-- ══════════ YEAR VIEW ══════════ -->
+<div class="screen" id="s-year">
+  <div class="topbar">
+    <div class="tb-title">
+      <h2>Academic Calendar</h2>
+      <p>DAV Public School, Bokaro · 2026–27</p>
+    </div>
+    <div class="tb-actions">
+      <div class="ib" id="bell-btn" onclick="openNotif()">
+        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="ndot" id="ndot"></div>
+      </div>
+      <div class="ib" id="lock-btn" onclick="clickAdmin()">
+        <svg viewBox="0 0 24 24" id="lock-icon"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+    </div>
+  </div>
+  <div id="admin-bar">
+    <span>🔓 Admin Mode — You can add/edit/delete events</span>
+    <button class="ab-logout" onclick="adminOut()">Logout</button>
+  </div>
+  <div class="sbody" id="year-body"></div>
+</div>
+
+<!-- ══════════ MONTH VIEW ══════════ -->
+<div class="screen" id="s-month">
+  <div class="topbar">
+    <div class="tb-back" onclick="nav('year')">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </div>
+    <div class="tb-title">
+      <h2 id="mh-name">Month</h2>
+      <p>DAV Academic Calendar 2026–27</p>
+    </div>
+    <div class="tb-actions">
+      <div class="ib admin-active" id="m-add-btn" onclick="openAdd()" style="display:none">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </div>
+    </div>
+  </div>
+  <div id="admin-bar2" style="display:none;background:rgba(185,28,28,.9);padding:5px 14px;font-size:.7rem;color:#fff;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.1)">🔓 Admin Mode Active</div>
+  <div class="sbody" id="month-body"></div>
+  <div class="mnavbar">
+    <div class="mnav" onclick="goMonth(-1)">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      <span id="prev-lbl">Prev</span>
+    </div>
+    <span class="mpos" id="m-pos">1/12</span>
+    <div class="mnav" onclick="goMonth(1)">
+      <span id="next-lbl">Next</span>
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DAY VIEW ══════════ -->
+<div class="screen" id="s-day">
+  <div class="topbar">
+    <div class="tb-back" onclick="nav('month')">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </div>
+    <div class="tb-title">
+      <h2 id="dh-name">Day</h2>
+      <p id="dh-sub">Event details</p>
+    </div>
+    <div class="tb-actions">
+      <div class="ib admin-active" id="d-add-btn" onclick="openAdd()" style="display:none">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </div>
+    </div>
+  </div>
+  <div class="sbody" id="day-body"></div>
+  <div class="dnav">
+    <div class="dnavb" onclick="goDay(-1)">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Prev Day
+    </div>
+    <div class="dnavb" onclick="goDay(1)">
+      Next Day
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<!-- ══════════ OVERLAYS ══════════ -->
+
+<!-- Admin Login -->
+<div class="overlay" id="ov-admin" onclick="if(event.target===this)closeOv('ov-admin')">
+  <div class="sheet">
+    <div class="sh-handle"></div>
+    <div class="sh-title">Admin Login 🔐</div>
+    <div class="sh-sub">Principal / Admin access only</div>
+    <div class="fl">
+      <label class="flb">Password</label>
+      <input type="password" class="fi" id="pwd-in" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')tryLogin()">
+    </div>
+    <div class="err" id="pwd-err">❌ Wrong password. Try again.</div>
+    <button class="bp primary" onclick="tryLogin()">Login</button>
+    <button class="bp secondary" onclick="closeOv('ov-admin')">Cancel</button>
+  </div>
+</div>
+
+<!-- Add/Edit Event -->
+<div class="overlay" id="ov-ev" onclick="if(event.target===this)closeOv('ov-ev')">
+  <div class="sheet">
+    <div class="sh-handle"></div>
+    <div class="sh-title" id="ev-title">Add Event</div>
+    <div class="sh-sub" id="ev-sub">Fill in the details below</div>
+    <div class="fr2">
+      <div class="fl">
+        <label class="flb">Month</label>
+        <select class="fi" id="f-mon" onchange="fillDays()"></select>
+      </div>
+      <div class="fl">
+        <label class="flb">Day</label>
+        <select class="fi" id="f-day"></select>
+      </div>
+    </div>
+    <div class="fl">
+      <label class="flb">Event Name</label>
+      <input type="text" class="fi" id="f-name" placeholder="e.g. Half Yearly Examination" maxlength="150" autocomplete="off">
+    </div>
+    <div class="fl">
+      <label class="flb">Category</label>
+      <div class="cat-grid">
+        <div class="cb exam" onclick="pickCat('exam',this)"><span class="ci">📝</span><span class="cn">Exam</span></div>
+        <div class="cb brk" onclick="pickCat('brk',this)"><span class="ci">🏖️</span><span class="cn">Break</span></div>
+        <div class="cb hol" onclick="pickCat('hol',this)"><span class="ci">🎉</span><span class="cn">Holiday</span></div>
+        <div class="cb ptm" onclick="pickCat('ptm',this)"><span class="ci">👨‍👩‍👧</span><span class="cn">PTM</span></div>
+        <div class="cb spt" onclick="pickCat('spt',this)"><span class="ci">⚽</span><span class="cn">Sports</span></div>
+        <div class="cb cca sel" onclick="pickCat('cca',this)"><span class="ci">🎨</span><span class="cn">CCA</span></div>
+      </div>
+    </div>
+    <button class="bp primary" onclick="saveEv()">💾 Save Event</button>
+    <button class="bp secondary" onclick="closeOv('ov-ev')">Cancel</button>
+  </div>
+</div>
+
+<!-- Delete confirm -->
+<div class="overlay" id="ov-del" onclick="if(event.target===this)closeOv('ov-del')">
+  <div class="sheet">
+    <div class="sh-handle"></div>
+    <div class="sh-title">Delete Event? 🗑️</div>
+    <div class="sh-sub" id="del-msg">This cannot be undone.</div>
+    <button class="bp danger" onclick="doDelete()">Yes, Delete</button>
+    <button class="bp secondary" onclick="closeOv('ov-del')">Cancel</button>
+  </div>
+</div>
+
+<!-- Notifications -->
+<div class="overlay" id="ov-notif" onclick="if(event.target===this)closeOv('ov-notif')">
+  <div class="sheet">
+    <div class="sh-handle"></div>
+    <div class="sh-title">Upcoming Events 🔔</div>
+    <div class="sh-sub">Next 30 days from today</div>
+    <div id="notif-list" style="max-height:280px;overflow-y:auto;margin-bottom:14px"></div>
+    <button class="bp primary" onclick="askNotif()">🔔 Enable Push Notifications</button>
+    <div style="font-size:.68rem;color:var(--dim);text-align:center;margin-top:6px" id="notif-st"></div>
+    <div style="margin-top:8px"></div>
+    <button class="bp secondary" onclick="closeOv('ov-notif')">Close</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════ DATA ═══════════════════════════
+const SEED = {"April":{"1":{"weekday":"W","event":null},"2":{"weekday":"T","event":null},"3":{"weekday":"F","event":null},"4":{"weekday":"S","event":null},"5":{"weekday":"S","event":null},"6":{"weekday":"M","event":null},"7":{"weekday":"T","event":"WORLD HEALTH DAY"},"8":{"weekday":"W","event":null},"9":{"weekday":"T","event":null},"10":{"weekday":"F","event":"CALLIGRAPHY COMPETITION (3-7)"},"11":{"weekday":"S","event":"PRAYER SONG COMPETITION (3-7)"},"12":{"weekday":"S","event":null},"13":{"weekday":"M","event":null},"14":{"weekday":"T","event":"DR. AMBEDKAR JAYANTI"},"15":{"weekday":"W","event":"WORLD ART DAY"},"16":{"weekday":"T","event":null},"17":{"weekday":"F","event":null},"18":{"weekday":"S","event":"POSTER & CARD MAKING COMPETITION"},"19":{"weekday":"S","event":"MT. HANSRAJ BIRTHDAY"},"20":{"weekday":"M","event":null},"21":{"weekday":"T","event":null},"22":{"weekday":"W","event":"EARTH DAY"},"23":{"weekday":"T","event":null},"24":{"weekday":"F","event":null},"25":{"weekday":"S","event":"HASIYA KAVITA COMPETITION (8-12)"},"26":{"weekday":"S","event":null},"27":{"weekday":"M","event":null},"28":{"weekday":"T","event":null},"29":{"weekday":"W","event":"CCA INAUGURATION CEREMONY"},"30":{"weekday":"T","event":"CCA INAUGURATION CEREMONY"}},"May":{"1":{"weekday":"F","event":"PICTURE COMPOSITION (3-7)"},"2":{"weekday":"S","event":"PTM (NURSERY TO CLASS 12)"},"3":{"weekday":"S","event":null},"4":{"weekday":"M","event":"UNIT TEST 1 (Jr & Sr)"},"5":{"weekday":"T","event":"UNIT TEST 1"},"6":{"weekday":"W","event":"UNIT TEST 1"},"7":{"weekday":"T","event":"UNIT TEST 1"},"8":{"weekday":"F","event":"UNIT TEST 1"},"9":{"weekday":"S","event":"UNIT TEST 1"},"10":{"weekday":"S","event":null},"11":{"weekday":"M","event":"TEACHERS SEMINAR"},"12":{"weekday":"T","event":"TEACHERS SEMINAR"},"13":{"weekday":"W","event":"TEACHERS SEMINAR"},"14":{"weekday":"T","event":"SUMMER BREAK"},"15":{"weekday":"F","event":"SUMMER BREAK"},"16":{"weekday":"S","event":"SUMMER BREAK"},"17":{"weekday":"S","event":"SUMMER BREAK"},"18":{"weekday":"M","event":"SUMMER BREAK"},"19":{"weekday":"T","event":"SUMMER BREAK"},"20":{"weekday":"W","event":"SUMMER BREAK"},"21":{"weekday":"T","event":"SUMMER BREAK"},"22":{"weekday":"F","event":"SUMMER BREAK"},"23":{"weekday":"S","event":"SUMMER BREAK"},"24":{"weekday":"S","event":"SUMMER BREAK"},"25":{"weekday":"M","event":"SUMMER BREAK"},"26":{"weekday":"T","event":"SUMMER BREAK"},"27":{"weekday":"W","event":"SUMMER BREAK"},"28":{"weekday":"T","event":"SUMMER BREAK"},"29":{"weekday":"F","event":"SUMMER BREAK"},"30":{"weekday":"S","event":"SUMMER BREAK"},"31":{"weekday":"S","event":"SUMMER BREAK"}},"June":{"1":{"weekday":"M","event":"SUMMER BREAK"},"2":{"weekday":"T","event":"SUMMER BREAK"},"3":{"weekday":"W","event":"SUMMER BREAK"},"4":{"weekday":"T","event":"SUMMER BREAK"},"5":{"weekday":"F","event":"SUMMER BREAK"},"6":{"weekday":"S","event":"SUMMER BREAK"},"7":{"weekday":"S","event":"SUMMER BREAK"},"8":{"weekday":"M","event":"SUMMER BREAK"},"9":{"weekday":"T","event":"SUMMER BREAK"},"10":{"weekday":"W","event":"SUMMER BREAK"},"11":{"weekday":"T","event":"SUMMER BREAK"},"12":{"weekday":"F","event":"SUMMER BREAK"},"13":{"weekday":"S","event":"SUMMER BREAK"},"14":{"weekday":"S","event":"SUMMER BREAK"},"15":{"weekday":"M","event":"SUMMER BREAK"},"16":{"weekday":"T","event":"SUMMER BREAK"},"17":{"weekday":"W","event":"SUMMER BREAK"},"18":{"weekday":"T","event":"SUMMER BREAK"},"19":{"weekday":"F","event":"ENGLISH STORY TELLING (3-7)"},"20":{"weekday":"S","event":"GROUP MUSICAL YOGA COMPETITION"},"21":{"weekday":"S","event":"INTERNATIONAL YOGA DAY"},"22":{"weekday":"M","event":null},"23":{"weekday":"T","event":null},"24":{"weekday":"W","event":null},"25":{"weekday":"T","event":null},"26":{"weekday":"F","event":null},"27":{"weekday":"S","event":"CARD MAKING COMPETITION"},"28":{"weekday":"S","event":null},"29":{"weekday":"M","event":null},"30":{"weekday":"T","event":null}},"July":{"1":{"weekday":"W","event":null},"2":{"weekday":"T","event":null},"3":{"weekday":"F","event":"PATRIOTIC GROUP DANCE (3-7)"},"4":{"weekday":"S","event":"NUKAD NATAK (8-12)"},"5":{"weekday":"S","event":null},"6":{"weekday":"M","event":null},"7":{"weekday":"T","event":null},"8":{"weekday":"W","event":null},"9":{"weekday":"T","event":null},"10":{"weekday":"F","event":null},"11":{"weekday":"S","event":"WASTE OUT OF USE COMPETITION"},"12":{"weekday":"S","event":null},"13":{"weekday":"M","event":null},"14":{"weekday":"T","event":null},"15":{"weekday":"W","event":null},"16":{"weekday":"T","event":null},"17":{"weekday":"F","event":"SPORTS CLUSTER"},"18":{"weekday":"S","event":"SPORTS CLUSTER"},"19":{"weekday":"S","event":null},"20":{"weekday":"M","event":null},"21":{"weekday":"T","event":null},"22":{"weekday":"W","event":null},"23":{"weekday":"T","event":null},"24":{"weekday":"F","event":null},"25":{"weekday":"S","event":null},"26":{"weekday":"S","event":null},"27":{"weekday":"M","event":null},"28":{"weekday":"T","event":null},"29":{"weekday":"W","event":null},"30":{"weekday":"T","event":null},"31":{"weekday":"F","event":"ENGLISH DEBATE COMPETITION"}},"August":{"1":{"weekday":"S","event":"PATRIOTIC GROUP SONG COMPETITION"},"2":{"weekday":"S","event":null},"3":{"weekday":"M","event":"UNIT TEST 2 (Jr to Sr)"},"4":{"weekday":"T","event":"UNIT TEST 2 (Jr to Sr)"},"5":{"weekday":"W","event":"UNIT TEST 2 (Jr to Sr)"},"6":{"weekday":"T","event":"UNIT TEST 2 (Jr to Sr)"},"7":{"weekday":"F","event":"UNIT TEST 2 (Jr to Sr)"},"8":{"weekday":"S","event":"UNIT TEST 2 (Jr to Sr)"},"9":{"weekday":"S","event":null},"10":{"weekday":"M","event":null},"11":{"weekday":"T","event":null},"12":{"weekday":"W","event":"CELEBRATING ROLE OF FREEDOM FIGHTERS"},"13":{"weekday":"T","event":null},"14":{"weekday":"F","event":"PARTITION HORROR REMEMBRANCE DAY"},"15":{"weekday":"S","event":"INDEPENDENCE DAY CELEBRATION"},"16":{"weekday":"S","event":null},"17":{"weekday":"M","event":null},"18":{"weekday":"T","event":null},"19":{"weekday":"W","event":"SANSKRIT DIWAS"},"20":{"weekday":"T","event":"ANNUAL SPORTS DAY"},"21":{"weekday":"F","event":"ANNUAL SPORTS DAY"},"22":{"weekday":"S","event":"PTM (NURSERY TO CLASS 12)"},"23":{"weekday":"S","event":null},"24":{"weekday":"M","event":null},"25":{"weekday":"T","event":null},"26":{"weekday":"W","event":null},"27":{"weekday":"T","event":null},"28":{"weekday":"F","event":null},"29":{"weekday":"S","event":"CLASSICAL GROUP DANCE COMPETITION"},"30":{"weekday":"S","event":null},"31":{"weekday":"M","event":null}},"September":{"1":{"weekday":"T","event":null},"2":{"weekday":"W","event":"JEWELLERY MAKING COMPETITION"},"3":{"weekday":"T","event":"CLASSROOM DECORATION (ORIGAMI)"},"4":{"weekday":"F","event":null},"5":{"weekday":"S","event":"TEACHERS DAY CELEBRATION"},"6":{"weekday":"S","event":null},"7":{"weekday":"M","event":null},"8":{"weekday":"T","event":null},"9":{"weekday":"W","event":null},"10":{"weekday":"T","event":null},"11":{"weekday":"F","event":null},"12":{"weekday":"S","event":"SOLO DANCE - FESTIVAL THEME"},"13":{"weekday":"S","event":null},"14":{"weekday":"M","event":"HINDI DIWAS"},"15":{"weekday":"T","event":null},"16":{"weekday":"W","event":null},"17":{"weekday":"T","event":null},"18":{"weekday":"F","event":null},"19":{"weekday":"S","event":"HALF YEARLY EXAMINATION"},"20":{"weekday":"S","event":null},"21":{"weekday":"M","event":"HALF YEARLY EXAMINATION"},"22":{"weekday":"T","event":"HALF YEARLY EXAMINATION"},"23":{"weekday":"W","event":"HALF YEARLY EXAMINATION"},"24":{"weekday":"T","event":"HALF YEARLY EXAMINATION"},"25":{"weekday":"F","event":"HALF YEARLY EXAMINATION"},"26":{"weekday":"S","event":"HALF YEARLY EXAMINATION"},"27":{"weekday":"S","event":null},"28":{"weekday":"M","event":"HALF YEARLY EXAMINATION"},"29":{"weekday":"T","event":"HALF YEARLY EXAMINATION"},"30":{"weekday":"W","event":"HALF YEARLY EXAMINATION"}},"October":{"1":{"weekday":"T","event":"HALF YEARLY EXAMINATION"},"2":{"weekday":"F","event":"GANDHI JAYANTI - RUN FOR DAV"},"3":{"weekday":"S","event":null},"4":{"weekday":"S","event":null},"5":{"weekday":"M","event":null},"6":{"weekday":"T","event":null},"7":{"weekday":"W","event":null},"8":{"weekday":"T","event":null},"9":{"weekday":"F","event":"RANGOLI MAKING COMPETITION (3-12)"},"10":{"weekday":"S","event":"PTM & COPY SHOWING (NUR TO 12)"},"11":{"weekday":"S","event":null},"12":{"weekday":"M","event":null},"13":{"weekday":"T","event":null},"14":{"weekday":"W","event":null},"15":{"weekday":"T","event":null},"16":{"weekday":"F","event":"DURGA PUJA HOLIDAYS"},"17":{"weekday":"S","event":"DURGA PUJA HOLIDAYS"},"18":{"weekday":"S","event":"DURGA PUJA HOLIDAYS"},"19":{"weekday":"M","event":"DURGA PUJA HOLIDAYS"},"20":{"weekday":"T","event":"DURGA PUJA HOLIDAYS"},"21":{"weekday":"W","event":"DURGA PUJA HOLIDAYS"},"22":{"weekday":"T","event":"DURGA PUJA HOLIDAYS"},"23":{"weekday":"F","event":null},"24":{"weekday":"S","event":"DIYA & THALI DECORATION COMPETITION"},"25":{"weekday":"S","event":null},"26":{"weekday":"M","event":null},"27":{"weekday":"T","event":null},"28":{"weekday":"W","event":null},"29":{"weekday":"T","event":null},"30":{"weekday":"F","event":null},"31":{"weekday":"S","event":"DIWALI DECORATION COMPETITION"}},"November":{"1":{"weekday":"S","event":null},"2":{"weekday":"M","event":null},"3":{"weekday":"T","event":null},"4":{"weekday":"W","event":null},"5":{"weekday":"T","event":null},"6":{"weekday":"F","event":null},"7":{"weekday":"S","event":"DIWALI & CHHATH PUJA HOLIDAY"},"8":{"weekday":"S","event":"DIWALI & CHHATH PUJA HOLIDAY"},"9":{"weekday":"M","event":"DIWALI & CHHATH PUJA HOLIDAY"},"10":{"weekday":"T","event":"DIWALI & CHHATH PUJA HOLIDAY"},"11":{"weekday":"W","event":"DIWALI & CHHATH PUJA HOLIDAY"},"12":{"weekday":"T","event":"DIWALI & CHHATH PUJA HOLIDAY"},"13":{"weekday":"F","event":"DIWALI & CHHATH PUJA HOLIDAY"},"14":{"weekday":"S","event":"CHILDREN'S DAY CELEBRATION"},"15":{"weekday":"S","event":"BIRSA MUNDA JAYANTI"},"16":{"weekday":"M","event":null},"17":{"weekday":"T","event":null},"18":{"weekday":"W","event":null},"19":{"weekday":"T","event":"PICNIC (CLASS 3-7)"},"20":{"weekday":"F","event":"PICNIC (CLASS 3-7)"},"21":{"weekday":"S","event":"PICNIC (CLASS 3-7)"},"22":{"weekday":"S","event":null},"23":{"weekday":"M","event":null},"24":{"weekday":"T","event":null},"25":{"weekday":"W","event":"PRACTICE TEST 1 (CLASS X & XII)"},"26":{"weekday":"T","event":"PRACTICE TEST 1 + CONSTITUTION DAY"},"27":{"weekday":"F","event":"PRACTICE TEST 1 (CLASS X & XII)"},"28":{"weekday":"S","event":"PRACTICE TEST 1 (CLASS X & XII)"},"29":{"weekday":"S","event":null},"30":{"weekday":"M","event":"PRACTICE TEST 1 (CLASS X & XII)"}},"December":{"1":{"weekday":"T","event":"PT1 (X,XII) + UT3 (VIII,IX,XI)"},"2":{"weekday":"W","event":"PT1 (X,XII) + UT3 (VIII,IX,XI)"},"3":{"weekday":"T","event":"PT1 (X,XII) + UT3 (VIII,IX,XI)"},"4":{"weekday":"F","event":"PT1 (X,XII) + UT3 (VIII,IX,XI)"},"5":{"weekday":"S","event":"PT1 (X,XII) + UT3 (VIII,IX,XI)"},"6":{"weekday":"S","event":null},"7":{"weekday":"M","event":null},"8":{"weekday":"T","event":"ANNUAL SPORTS DAY (NUR-9 & 11)"},"9":{"weekday":"W","event":"ANNUAL SPORTS DAY (NUR-9 & 11)"},"10":{"weekday":"T","event":null},"11":{"weekday":"F","event":null},"12":{"weekday":"S","event":"PTM (NURSERY TO CLASS 12)"},"13":{"weekday":"S","event":null},"14":{"weekday":"M","event":null},"15":{"weekday":"T","event":"PRACTICE TEST 2 (CLASS X & XII)"},"16":{"weekday":"W","event":"PRACTICE TEST 2 (CLASS X & XII)"},"17":{"weekday":"T","event":"PRACTICE TEST 2 (CLASS X & XII)"},"18":{"weekday":"F","event":"PRACTICE TEST 2 (CLASS X & XII)"},"19":{"weekday":"S","event":"PRACTICE TEST 2 (CLASS X & XII)"},"20":{"weekday":"S","event":"PRACTICE TEST 2 (CLASS X & XII)"},"21":{"weekday":"M","event":"PRACTICE TEST 2 (CLASS X & XII)"},"22":{"weekday":"T","event":"PT2 + SWAMI SHRADDHANAND BDAY"},"23":{"weekday":"W","event":"PRACTICE TEST 2 (CLASS X & XII)"},"24":{"weekday":"T","event":"PRACTICE TEST 2 (CLASS X & XII)"},"25":{"weekday":"F","event":null},"26":{"weekday":"S","event":null},"27":{"weekday":"S","event":null},"28":{"weekday":"M","event":null},"29":{"weekday":"T","event":null},"30":{"weekday":"W","event":null},"31":{"weekday":"T","event":null}},"January":{"1":{"weekday":"F","event":null},"2":{"weekday":"S","event":null},"3":{"weekday":"S","event":null},"4":{"weekday":"M","event":"PRE-BOARD EXAM (CLASS 10 & 12)"},"5":{"weekday":"T","event":null},"6":{"weekday":"W","event":null},"7":{"weekday":"T","event":null},"8":{"weekday":"F","event":null},"9":{"weekday":"S","event":null},"10":{"weekday":"S","event":null},"11":{"weekday":"M","event":"KITE MAKING COMPETITION (3-7)"},"12":{"weekday":"T","event":"NATIONAL YOUTH DAY"},"13":{"weekday":"W","event":"KITE FLYING CELEBRATION"},"14":{"weekday":"T","event":null},"15":{"weekday":"F","event":null},"16":{"weekday":"S","event":null},"17":{"weekday":"S","event":null},"18":{"weekday":"M","event":null},"19":{"weekday":"T","event":null},"20":{"weekday":"W","event":null},"21":{"weekday":"T","event":null},"22":{"weekday":"F","event":null},"23":{"weekday":"S","event":null},"24":{"weekday":"S","event":null},"25":{"weekday":"M","event":null},"26":{"weekday":"T","event":"REPUBLIC DAY CELEBRATION"},"27":{"weekday":"W","event":null},"28":{"weekday":"T","event":"PRE-BOARD EXAM (CLASS 8, 9, 11)"},"29":{"weekday":"F","event":"PRE-BOARD EXAM (CLASS 8, 9, 11)"},"30":{"weekday":"S","event":"PRE-BOARD EXAM (CLASS 8, 9, 11)"},"31":{"weekday":"S","event":"PRE-BOARD EXAM (CLASS 8, 9, 11)"}},"February":{"1":{"weekday":"M","event":"PRE-BOARD EXAM (CLASS 8, 9, 11)"},"2":{"weekday":"T","event":"PRE-BOARD EXAM (CLASS 8, 9, 11)"},"3":{"weekday":"W","event":"PRE-BOARD EXAM (CLASS 8, 9, 11)"},"4":{"weekday":"T","event":"PRE-BOARD EXAM (CLASS 8, 9, 11)"},"5":{"weekday":"F","event":null},"6":{"weekday":"S","event":"N.D. GROVER PUNYA TITHI"},"7":{"weekday":"S","event":null},"8":{"weekday":"M","event":null},"9":{"weekday":"T","event":null},"10":{"weekday":"W","event":null},"11":{"weekday":"T","event":null},"12":{"weekday":"F","event":"DAYANAND JAYANTI"},"13":{"weekday":"S","event":"BLESSING CEREMONY (GRADUATING STUDENTS)"},"14":{"weekday":"S","event":null},"15":{"weekday":"M","event":"ANNUAL EXAMINATION (Class 3-9, 11)"},"16":{"weekday":"T","event":"ANNUAL EXAMINATION (Class 3-9, 11)"},"17":{"weekday":"W","event":"ANNUAL EXAMINATION (Class 3-9, 11)"},"18":{"weekday":"T","event":"ANNUAL EXAMINATION (Class 3-9, 11)"},"19":{"weekday":"F","event":"ANNUAL EXAMINATION (Class 3-9, 11)"},"20":{"weekday":"S","event":"ANNUAL EXAMINATION (Class 3-9, 11)"},"21":{"weekday":"S","event":"ANNUAL EXAMINATION (Class 3-9, 11)"},"22":{"weekday":"M","event":"ANNUAL EXAMINATION (Class 3-9, 11)"},"23":{"weekday":"T","event":"ANNUAL EXAMINATION (Class 3-9, 11)"},"24":{"weekday":"W","event":"ANNUAL EXAMINATION (Class 3-9, 11)"},"25":{"weekday":"T","event":"ANNUAL EXAMINATION (Class 3-9, 11)"},"26":{"weekday":"F","event":"ANNUAL EXAMINATION (Class 3-9, 11)"},"27":{"weekday":"S","event":"ANNUAL EXAMINATION (Class 3-9, 11)"},"28":{"weekday":"S","event":"ANNUAL EXAMINATION (Class 3-9, 11)"}},"March":{"1":{"weekday":"M","event":"ANNUAL EXAMINATION (Class 3-9, 11)"},"2":{"weekday":"T","event":"ANNUAL EXAMINATION (Class 3-9, 11)"},"3":{"weekday":"W","event":"ANNUAL EXAMINATION (Class 3-9, 11)"},"4":{"weekday":"T","event":"ANNUAL EXAMINATION (Class 3-9, 11)"},"5":{"weekday":"F","event":"ANNUAL EXAMINATION (Class 3-9, 11)"},"6":{"weekday":"S","event":"ANNUAL EXAMINATION (Class 3-9, 11)"},"7":{"weekday":"S","event":"ANNUAL EXAMINATION (Class 3-9, 11)"},"8":{"weekday":"M","event":null},"9":{"weekday":"T","event":null},"10":{"weekday":"W","event":null},"11":{"weekday":"T","event":null},"12":{"weekday":"F","event":null},"13":{"weekday":"S","event":null},"14":{"weekday":"S","event":null},"15":{"weekday":"M","event":null},"16":{"weekday":"T","event":null},"17":{"weekday":"W","event":null},"18":{"weekday":"T","event":null},"19":{"weekday":"F","event":null},"20":{"weekday":"S","event":null},"21":{"weekday":"S","event":null},"22":{"weekday":"M","event":null},"23":{"weekday":"T","event":null},"24":{"weekday":"W","event":null},"25":{"weekday":"T","event":null},"26":{"weekday":"F","event":null},"27":{"weekday":"S","event":null},"28":{"weekday":"S","event":null},"29":{"weekday":"M","event":null},"30":{"weekday":"T","event":null},"31":{"weekday":"W","event":null}}};
+
+// ═════════════════════ CONSTANTS ═════════════════════
+const MO = ['April','May','June','July','August','September','October','November','December','January','February','March'];
+const MO_YR = {April:2026,May:2026,June:2026,July:2026,August:2026,September:2026,October:2026,November:2026,December:2026,January:2027,February:2027,March:2027};
+const MO_ST = {April:3,May:5,June:1,July:3,August:6,September:2,October:4,November:0,December:2,January:5,February:1,March:1};
+const MO_D  = {April:30,May:31,June:30,July:31,August:31,September:30,October:31,November:30,December:31,January:31,February:28,March:31};
+const WDAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const CI = {exam:'📝',brk:'🏖️',hol:'🎉',ptm:'👨‍👩‍👧',spt:'⚽',cca:'🎨'};
+const CL = {exam:'Examination / Test',brk:'Summer Break',hol:'Holiday / Jayanti',ptm:'Parent-Teacher Meeting',spt:'Sports / Activity',cca:'CCA / Competition'};
+const ADMIN_PWD = 'dav@bokaro2026';
+
+// ═════════════════════ STATE ═════════════════════
+let D = {};         // live data
+let admin = false;
+let curScreen = 'splash';
+let curMon = 'April';
+let curDay = 1;
+let editMode = false;
+let editKey = null; // {month, day}
+let delKey = null;
+let selCat = 'cca';
+let txTimer = null;
+
+// ═════════════════════ INIT ═════════════════════
+function init() {
+  try {
+    const s = localStorage.getItem('dav_cal_v3');
+    D = s ? JSON.parse(s) : JSON.parse(JSON.stringify(SEED));
+  } catch(e) {
+    D = JSON.parse(JSON.stringify(SEED));
+  }
+  checkToday();
+}
+
+function save() {
+  try { localStorage.setItem('dav_cal_v3', JSON.stringify(D)); } catch(e) {}
+}
+
+// ═════════════════════ CLASSIFY ═════════════════════
+function cat(ev) {
+  if (!ev) return null;
+  const e = ev.toUpperCase();
+  if (/EXAM|UNIT TEST|U\.T|HALF YEARLY|PRACTICE TEST|PRE.BOARD|BOARD/.test(e)) return 'exam';
+  if (/SUMMER BREAK/.test(e)) return 'brk';
+  if (/HOLIDAY|DIWALI|DURGA|CHHATH|GANDHI|INDEPENDENCE|REPUBLIC|JAYANTI|DIWAS|PARTITION/.test(e)) return 'hol';
+  if (/PTM|PARENT/.test(e)) return 'ptm';
+  if (/SPORT|PICNIC|YOGA|CLUSTER/.test(e)) return 'spt';
+  return 'cca';
+}
+function dow(mon, d) { return (MO_ST[mon] + d - 1) % 7; }
+function g(mon, d) { return (D[mon] && D[mon][String(d)]) ? D[mon][String(d)] : {weekday:null,event:null}; }
+
+// ═════════════════════ NAVIGATION ═════════════════════
+function nav(to) {
+  const order = ['splash','year','month','day'];
+  const screens = {splash:'s-splash',year:'s-year',month:'s-month',day:'s-day'};
+  const fromEl = document.getElementById(screens[curScreen]);
+  const toEl = document.getElementById(screens[to]);
+  
+  fromEl.classList.remove('active');
+  fromEl.classList.add('behind');
+  toEl.classList.remove('behind');
+  toEl.classList.add('active');
+  
+  setTimeout(() => fromEl.classList.remove('behind'), 400);
+  curScreen = to;
+  
+  if (to === 'year') buildYear();
+  if (to === 'month') buildMonth(curMon);
+  if (to === 'day') buildDay(curMon, curDay);
+}
+
+// ═════════════════════ YEAR VIEW ═════════════════════
+function buildYear() {
+  let te=0,tx=0,tb=0,th=0,tp=0,ts=0;
+  MO.forEach(m => {
+    Object.values(D[m]||{}).forEach(v => {
+      if (!v.event) return;
+      te++; const c = cat(v.event);
+      if(c==='exam')tx++; else if(c==='brk')tb++; else if(c==='hol')th++; else if(c==='ptm')tp++; else if(c==='spt')ts++;
+    });
+  });
+
+  // Upcoming
+  const today = new Date();
+  const up = [];
+  MO.forEach(m => {
+    const yr = MO_YR[m];
+    const mi = ['January','February','March','April','May','June','July','August','September','October','November','December'].indexOf(m);
+    Object.entries(D[m]||{}).forEach(([d,v]) => {
+      if (!v.event) return;
+      const ed = new Date(yr, mi, +d);
+      const diff = Math.ceil((ed - today) / 86400000);
+      if (diff >= 0 && diff <= 60) up.push({m, d:+d, ev:v.event, diff});
+    });
+  });
+  up.sort((a,b) => a.diff-b.diff);
+
+  const bgC = {exam:'var(--exbg)',brk:'var(--brkbg)',hol:'var(--holbg)',ptm:'var(--ptmbg)',spt:'var(--sptbg)',cca:'var(--ccabg)'};
+  const fgC = {exam:'var(--exam)',brk:'var(--brk)',hol:'var(--hol)',ptm:'var(--ptm)',spt:'var(--spt)',cca:'var(--cca)'};
+
+  let upHTML = '';
+  if (up.length) {
+    upHTML = up.slice(0,5).map(u => {
+      const c = cat(u.ev);
+      const label = u.diff===0?'📍 Today':u.diff===1?'Tomorrow':`In ${u.diff} days`;
+      return `<div class="up-item" onclick="jumpDay('${u.m}',${u.d})">
+        <div class="up-badge" style="background:${bgC[c]};color:${fgC[c]}">
+          <div class="up-d">${u.d}</div><div class="up-m">${u.m.slice(0,3)}</div>
+        </div>
+        <div class="up-info">
+          <div class="up-name">${u.ev}</div>
+          <div class="up-away">${label}</div>
+        </div>
+        <div class="up-arr">›</div>
+      </div>`;
+    }).join('');
+  } else {
+    upHTML = '<div class="no-upcoming">No events in next 60 days</div>';
+  }
+
+  // Month cards
+  let cards = MO.map(m => {
+    const total = MO_D[m], start = MO_ST[m];
+    const counts = {exam:0,brk:0,hol:0,ptm:0,spt:0,cca:0};
+    let dots = '';
+    for(let i=0;i<start;i++) dots+='<div class="md em"></div>';
+    for(let d=1;d<=total;d++){
+      const info=D[m]?.[String(d)], dw=dow(m,d);
+      let dc='';
+      if(dw===0) dc='su';
+      else if(info?.event){const c=cat(info.event);dc=c;if(counts[c]!==undefined)counts[c]++;}
+      dots+=`<div class="md ${dc}"></div>`;
+    }
+    const ec = Object.values(D[m]||{}).filter(v=>v.event).length;
+    const tags = Object.entries(counts).filter(([,v])=>v>0).slice(0,2)
+      .map(([k,v])=>`<span class="mtag ${k}">${v} ${k}</span>`).join('');
+    return `<div class="mcard" onclick="openMon('${m}')">
+      <div class="mcard-top">
+        <span class="mcard-name">${m}</span>
+        <span class="mcard-cnt">${ec}</span>
+      </div>
+      <div class="mini-grid">${dots}</div>
+      <div class="mcard-tags">${tags||`<span class="mtag cca">${ec} events</span>`}</div>
+      <div style="font-size:.58rem;color:var(--dim);margin-top:4px">${MO_YR[m]}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('year-body').innerHTML = `
+    <div class="stats-row">
+      <div class="scard ec"><div class="snum">${tx}</div><div class="slbl">Exam Days</div></div>
+      <div class="scard bc"><div class="snum">${tb}</div><div class="slbl">Break Days</div></div>
+      <div class="scard hc"><div class="snum">${th}</div><div class="slbl">Holidays</div></div>
+      <div class="scard pc"><div class="snum">${tp}</div><div class="slbl">PTM Days</div></div>
+      <div class="scard sc"><div class="snum">${ts}</div><div class="slbl">Sports</div></div>
+      <div class="scard cc"><div class="snum">${te}</div><div class="slbl">Total Events</div></div>
+    </div>
+    <div class="legend">
+      <div class="lpill" style="color:var(--exam)"><div class="ldot" style="background:var(--exam)"></div>Exams</div>
+      <div class="lpill" style="color:var(--brk)"><div class="ldot" style="background:var(--brk)"></div>Break</div>
+      <div class="lpill" style="color:var(--hol)"><div class="ldot" style="background:var(--hol)"></div>Holidays</div>
+      <div class="lpill" style="color:var(--ptm)"><div class="ldot" style="background:var(--ptm)"></div>PTM</div>
+      <div class="lpill" style="color:var(--spt)"><div class="ldot" style="background:var(--spt)"></div>Sports</div>
+      <div class="lpill" style="color:var(--cca)"><div class="ldot" style="background:var(--cca)"></div>CCA</div>
+    </div>
+    <div class="upcoming"><div class="up-hd"><span>⏰</span> Upcoming Events</div>${upHTML}</div>
+    <div class="sec-title">All Months — Tap to view</div>
+    <div class="months-grid">${cards}</div>
+    <div style="height:16px"></div>`;
+}
+
+function openMon(m) { curMon = m; nav('month'); }
+function jumpDay(m, d) { curMon=m; curDay=+d; nav('month'); setTimeout(()=>{curDay=+d;nav('day');},120); }
+
+// ═════════════════════ MONTH VIEW ═════════════════════
+function buildMonth(m) {
+  curMon = m;
+  const idx = MO.indexOf(m);
+  const yr = MO_YR[m];
+  const total = MO_D[m], start = MO_ST[m];
+  const data = D[m]||{};
+
+  document.getElementById('mh-name').textContent = m + ' ' + yr;
+  document.getElementById('prev-lbl').textContent = idx>0 ? MO[idx-1].slice(0,3) : '—';
+  document.getElementById('next-lbl').textContent = idx<11 ? MO[idx+1].slice(0,3) : '—';
+  document.getElementById('m-pos').textContent = (idx+1)+'/12';
+  document.getElementById('m-add-btn').style.display = admin ? 'flex' : 'none';
+  document.getElementById('admin-bar2').style.display = admin ? 'block' : 'none';
+
+  const counts = {exam:0,brk:0,hol:0,ptm:0,spt:0,cca:0};
+  Object.values(data).forEach(v=>{const c=cat(v.event);if(c&&counts[c]!==undefined)counts[c]++;});
+  const fgC = {exam:'var(--exam)',brk:'var(--brk)',hol:'var(--hol)',ptm:'var(--ptm)',spt:'var(--spt)',cca:'var(--cca)'};
+  const nm  = {exam:'Exams',brk:'Break',hol:'Holidays',ptm:'PTM',spt:'Sports',cca:'CCA'};
+  const chips = Object.entries(counts).filter(([,v])=>v>0)
+    .map(([k,v])=>`<div class="msc"><span class="n" style="color:${fgC[k]}">${v}</span> <span style="color:var(--dim)">${nm[k]}</span></div>`).join('');
+
+  const today = new Date();
+  const mi = ['January','February','March','April','May','June','July','August','September','October','November','December'].indexOf(m)+1;
+  const isThisMon = yr===today.getFullYear() && mi===today.getMonth()+1;
+
+  let cells = '';
+  for(let i=0;i<start;i++) cells+='<div class="dcell emp"></div>';
+  for(let d=1;d<=total;d++){
+    const info=data[String(d)]||{}, dw=dow(m,d), isSun=dw===0, isToday=isThisMon&&d===today.getDate();
+    const c = cat(info.event);
+    let cls='dcell';
+    if(isSun) cls+=' su';
+    if(isToday) cls+=' td';
+    if(c) cls+=' hev';
+    const chip = info.event
+      ? `<div class="dev ${c}">${info.event}</div>`
+      : (admin ? '<div class="add-plus">+</div>' : '');
+    cells+=`<div class="${cls}" onclick="openDay2(${d})">
+      <div class="dnum">${d}${isToday?'<div class="td-dot"></div>':''}</div>
+      ${chip}
+    </div>`;
+  }
+
+  document.getElementById('month-body').innerHTML = `
+    <div class="m-hero">
+      <div class="m-name">${m} <span class="m-yr">${yr}</span></div>
+      <div class="m-stats">${chips||'<div class="msc" style="color:var(--dim)">No events</div>'}</div>
+    </div>
+    <div class="wdays">
+      <div class="wd su">Sun</div><div class="wd">Mon</div><div class="wd">Tue</div>
+      <div class="wd">Wed</div><div class="wd">Thu</div><div class="wd">Fri</div><div class="wd">Sat</div>
+    </div>
+    <div class="days-grid">${cells}</div>`;
+}
+
+function openDay2(d) { curDay=d; nav('day'); }
+function goMonth(dir) {
+  const i = MO.indexOf(curMon)+dir;
+  if(i<0||i>11) return;
+  curMon=MO[i]; buildMonth(curMon);
+}
+
+// ═════════════════════ DAY VIEW ═════════════════════
+function buildDay(m, d) {
+  curMon=m; curDay=+d;
+  const info = g(m, d);
+  const dw = dow(m, d);
+  const yr = MO_YR[m];
+  const c = cat(info.event);
+
+  document.getElementById('dh-name').textContent = d+' '+m;
+  document.getElementById('dh-sub').textContent = WDAYS[dw];
+  document.getElementById('d-add-btn').style.display = (admin&&!info.event)?'flex':'none';
+
+  const today=new Date();
+  const mi=['January','February','March','April','May','June','July','August','September','October','November','December'].indexOf(m)+1;
+  const isToday = yr===today.getFullYear()&&mi===today.getMonth()+1&&+d===today.getDate();
+
+  let body='';
+  if(info.event){
+    const editBtn = admin ? `<div class="ev-acts">
+      <button class="ebtn edit" onclick="openEdit('${m}',${d})">✏️ Edit</button>
+      <button class="ebtn del" onclick="askDel('${m}',${d})">🗑 Delete</button>
+    </div>` : '';
+    body=`<div class="ev-card ${c}">
+      <div class="ev-type">${CI[c]} ${CL[c]}</div>
+      <div class="ev-name">${info.event}</div>
+      ${editBtn}
+    </div>`;
+  } else {
+    const addBtn = admin ? `<button class="btn-add-day" onclick="openAdd()">＋ Add Event</button>` : '';
+    body=`<div class="no-ev"><div class="ni">📅</div><p>No event scheduled</p>${addBtn}</div>`;
+  }
+
+  document.getElementById('day-body').innerHTML=`
+    <div class="d-hero">
+      ${isToday?'<div class="today-badge">📍 Today</div>':''}
+      <div class="d-big">${String(d).padStart(2,'0')}</div>
+      <div class="d-full">${WDAYS[dw]}, ${d} ${m} ${yr}</div>
+      <div class="d-wd">Week ${Math.ceil((MO_ST[m]+d)/7)} &nbsp;·&nbsp; ${m} ${yr}</div>
+    </div>
+    <div class="d-body">${body}</div>`;
+}
+
+function goDay(dir) {
+  let d=curDay+dir, m=curMon;
+  if(d<1){const i=MO.indexOf(m)-1;if(i<0)return;m=MO[i];d=MO_D[m];}
+  else if(d>MO_D[m]){const i=MO.indexOf(m)+1;if(i>11)return;m=MO[i];d=1;}
+  curMon=m;curDay=d;buildDay(m,d);
+}
+
+// ═════════════════════ ADMIN ═════════════════════
+function clickAdmin() {
+  if(admin){adminOut();return;}
+  document.getElementById('pwd-in').value='';
+  document.getElementById('pwd-err').style.display='none';
+  openOv('ov-admin');
+  setTimeout(()=>document.getElementById('pwd-in').focus(),320);
+}
+function tryLogin(){
+  if(document.getElementById('pwd-in').value===ADMIN_PWD){
+    admin=true;
+    closeOv('ov-admin');
+    document.getElementById('admin-bar').style.display='flex';
+    document.getElementById('lock-btn').classList.add('admin-active');
+    toast('🔓 Admin mode ON','ok');
+    if(curScreen==='year')buildYear();
+    if(curScreen==='month')buildMonth(curMon);
+    if(curScreen==='day')buildDay(curMon,curDay);
+  } else {
+    document.getElementById('pwd-err').style.display='block';
+  }
+}
+function adminOut(){
+  admin=false;
+  document.getElementById('admin-bar').style.display='none';
+  document.getElementById('admin-bar2').style.display='none';
+  document.getElementById('lock-btn').classList.remove('admin-active');
+  document.getElementById('m-add-btn').style.display='none';
+  document.getElementById('d-add-btn').style.display='none';
+  toast('🔒 Admin mode OFF');
+  if(curScreen==='month')buildMonth(curMon);
+  if(curScreen==='day')buildDay(curMon,curDay);
+}
+
+// ═════════════════════ EVENT CRUD ═════════════════════
+function openAdd(){
+  editMode=false;editKey=null;
+  document.getElementById('ev-title').textContent='Add Event ✏️';
+  document.getElementById('ev-sub').textContent='Fill in the details below';
+  fillMons(curMon); fillDays(); 
+  document.getElementById('f-mon').disabled=false;
+  document.getElementById('f-day').disabled=false;
+  document.getElementById('f-name').value='';
+  pickCat('cca');
+  openOv('ov-ev');
+  setTimeout(()=>document.getElementById('f-name').focus(),320);
+}
+function openEdit(m,d){
+  editMode=true;editKey={m,d};
+  const info=g(m,d);
+  document.getElementById('ev-title').textContent='Edit Event ✏️';
+  document.getElementById('ev-sub').textContent=`${d} ${m} ${MO_YR[m]}`;
+  fillMons(m); document.getElementById('f-mon').disabled=true;
+  fillDays(m,+d); document.getElementById('f-day').disabled=true;
+  document.getElementById('f-name').value=info.event||'';
+  pickCat(cat(info.event)||'cca');
+  openOv('ov-ev');
+  setTimeout(()=>document.getElementById('f-name').focus(),320);
+}
+function saveEv(){
+  const name=document.getElementById('f-name').value.trim();
+  if(!name){toast('Please enter an event name','er');return;}
+  const m=document.getElementById('f-mon').value;
+  const d=parseInt(document.getElementById('f-day').value);
+  if(!D[m])D[m]={};
+  if(!D[m][String(d)])D[m][String(d)]={weekday:null,event:null};
+  D[m][String(d)].event=name.toUpperCase();
+  save();
+  closeOv('ov-ev');
+  document.getElementById('f-mon').disabled=false;
+  document.getElementById('f-day').disabled=false;
+  toast('✅ Event saved — '+d+' '+m,'ok');
+  if(curScreen==='year')buildYear();
+  if(curScreen==='month')buildMonth(curMon);
+  if(curScreen==='day')buildDay(curMon,curDay);
+}
+function askDel(m,d){
+  delKey={m,d};
+  const info=g(m,d);
+  document.getElementById('del-msg').textContent='"'+info.event+'" on '+d+' '+m+' '+MO_YR[m];
+  openOv('ov-del');
+}
+function doDelete(){
+  if(!delKey)return;
+  const {m,d}=delKey;
+  if(D[m]&&D[m][String(d)])D[m][String(d)].event=null;
+  save();delKey=null;
+  closeOv('ov-del');
+  toast('🗑 Event deleted');
+  if(curScreen==='year')buildYear();
+  if(curScreen==='month')buildMonth(curMon);
+  if(curScreen==='day')buildDay(curMon,curDay);
+}
+
+// ═════════════════════ FORM HELPERS ═════════════════════
+function fillMons(sel){
+  const el=document.getElementById('f-mon');
+  el.innerHTML='';
+  MO.forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m+' '+MO_YR[m];if(m===sel)o.selected=true;el.appendChild(o);});
+}
+function fillDays(m,sel){
+  m=m||document.getElementById('f-mon').value;
+  const el=document.getElementById('f-day');
+  el.innerHTML='';
+  const total=MO_D[m]||31;
+  for(let d=1;d<=total;d++){const o=document.createElement('option');o.value=d;o.textContent=d;if(d===sel)o.selected=true;el.appendChild(o);}
+  // default to curDay if in same month
+  if(!sel&&curDay>=1&&curDay<=total)el.value=curDay;
+}
+function pickCat(c,el){
+  selCat=c;
+  document.querySelectorAll('.cb').forEach(b=>b.classList.remove('sel'));
+  if(el){el.classList.add('sel');}
+  else{document.querySelectorAll('.cb').forEach(b=>{if(b.classList.contains(c))b.classList.add('sel');});}
+}
+
+// ═════════════════════ NOTIFICATIONS ═════════════════════
+function openNotif(){
+  const today=new Date();
+  const bgC={exam:'var(--exbg)',brk:'var(--brkbg)',hol:'var(--holbg)',ptm:'var(--ptmbg)',spt:'var(--sptbg)',cca:'var(--ccabg)'};
+  const fgC={exam:'var(--exam)',brk:'var(--brk)',hol:'var(--hol)',ptm:'var(--ptm)',spt:'var(--spt)',cca:'var(--cca)'};
+  const items=[];
+  MO.forEach(m=>{
+    const yr=MO_YR[m];
+    const mi=['January','February','March','April','May','June','July','August','September','October','November','December'].indexOf(m);
+    Object.entries(D[m]||{}).forEach(([d,v])=>{
+      if(!v.event)return;
+      const ed=new Date(yr,mi,+d);
+      const diff=Math.ceil((ed-today)/86400000);
+      if(diff>=0&&diff<=30)items.push({m,d:+d,ev:v.event,diff});
+    });
+  });
+  items.sort((a,b)=>a.diff-b.diff);
+  const listEl=document.getElementById('notif-list');
+  if(items.length){
+    listEl.innerHTML=items.map(it=>{
+      const c=cat(it.ev);
+      const label=it.diff===0?'Today':it.diff===1?'Tomorrow':`In ${it.diff} days`;
+      return `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)">
+        <div style="width:38px;height:38px;border-radius:9px;background:${bgC[c]};color:${fgC[c]};display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">${CI[c]}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:.8rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.ev}</div>
+          <div style="font-size:.68rem;color:var(--dim);margin-top:2px">${it.d} ${it.m} · ${label}</div>
+        </div>
+      </div>`;
+    }).join('');
+  } else {
+    listEl.innerHTML='<p style="color:var(--dim);font-size:.82rem;text-align:center;padding:16px 0">No events in next 30 days</p>';
+  }
+  const perm=typeof Notification!=='undefined'?Notification.permission:'unavailable';
+  document.getElementById('notif-st').textContent=perm==='granted'?'✅ Notifications enabled':perm==='denied'?'❌ Blocked in browser settings':'';
+  openOv('ov-notif');
+}
+async function askNotif(){
+  if(typeof Notification==='undefined'){toast('Not supported on this browser','er');return;}
+  const p=await Notification.requestPermission();
+  if(p==='granted'){toast('🔔 Notifications enabled!','ok');document.getElementById('notif-st').textContent='✅ Enabled';}
+  else{toast('Permission denied','er');}
+}
+function checkToday(){
+  const today=new Date();
+  const m=['January','February','March','April','May','June','July','August','September','October','November','December'][today.getMonth()];
+  const ev=D[m]&&D[m][String(today.getDate())]&&D[m][String(today.getDate())].event;
+  if(ev){document.getElementById('ndot').style.display='block';}
+}
+
+// ═════════════════════ OVERLAY ═════════════════════
+function openOv(id){document.getElementById(id).classList.add('on');}
+function closeOv(id){
+  document.getElementById(id).classList.remove('on');
+  document.getElementById('f-mon').disabled=false;
+  document.getElementById('f-day').disabled=false;
+}
+
+// ═════════════════════ TOAST ═════════════════════
+function toast(msg,type=''){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.className='on'+(type?' '+type:'');
+  clearTimeout(txTimer);txTimer=setTimeout(()=>el.className='',3000);
+}
+
+// ═════════════════════ SWIPE ═════════════════════
+let tx0=0,ty0=0;
+document.addEventListener('touchstart',e=>{tx0=e.touches[0].clientX;ty0=e.touches[0].clientY;},{passive:true});
+document.addEventListener('touchend',e=>{
+  if(curScreen!=='month')return;
+  const dx=e.changedTouches[0].clientX-tx0, dy=e.changedTouches[0].clientY-ty0;
+  if(Math.abs(dx)>55&&Math.abs(dy)<40)goMonth(dx<0?1:-1);
+},{passive:true});
+
+// ═════════════════════ KEYBOARD ═════════════════════
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')['ov-admin','ov-ev','ov-del','ov-notif'].forEach(closeOv);
+  if(e.key==='Enter'&&document.getElementById('ov-admin').classList.contains('on'))tryLogin();
+  if(e.key==='Enter'&&document.getElementById('ov-ev').classList.contains('on')&&document.activeElement.id!=='f-name')saveEv();
+  if(e.key==='ArrowLeft'&&curScreen==='month')goMonth(-1);
+  if(e.key==='ArrowRight'&&curScreen==='month')goMonth(1);
+});
+
+// ═════════════════════ RUN ═════════════════════
+init();
+</script>
+</body>
+</html>
